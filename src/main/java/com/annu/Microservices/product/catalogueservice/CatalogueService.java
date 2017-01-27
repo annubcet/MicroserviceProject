@@ -3,8 +3,6 @@ package com.annu.Microservices.product.catalogueservice;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,25 +25,34 @@ public class CatalogueService {
 	@RequestMapping(value="/CatalogueService/addProduct",method=RequestMethod.POST)
 	public String addProduct(@RequestBody Product product)
 	{
-		impl.createTable();
 		int i=impl.addProduct(product);
-		return "no of product added:"+i+"Product name:"+product.getName();
+		if(i !=0)
+		{
+		return "No of product added:"+i+"    "+"Product name:"+product.getName();
+		}else{
+			return "Product not added";
+		}
 	}
 	
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/CatalogueService/retriveProduct/{id}",method=RequestMethod.GET)
-	public List<Product> retriveProduct(@PathVariable int productId)	
+	@RequestMapping(value="/CatalogueService/retriveProduct/{Category}",method=RequestMethod.GET)
+	public List<Product> retriveProduct(@PathVariable("Category") String productCategory)
 	{
-		
-		return (List<Product>) impl.retriveProduct(productId);
+
+		return impl.retriveProduct(productCategory);
 		
 	}
 	
     @RequestMapping(value="/CatalogueService/removeProduct/{id}",method=RequestMethod.DELETE)
-	public String removeProduct(@PathVariable int id)
+	public String removeProduct(@PathVariable("id") int id)
 	{
 		int i=impl.deleteProduct(id);
-		return "no of product deleted :"+i+"Product code:"+id;
+		if(i!=0)
+		{
+		return "No of product deleted :"+i+"  "+"Product code:"+id;
+		}else{
+			return "Product not found";
+		}
 		
 	}
 }

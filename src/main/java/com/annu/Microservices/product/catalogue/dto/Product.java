@@ -9,6 +9,10 @@ public class Product {
 	private String manufacturer;
 	private String category;
 	
+	public Product()
+	{
+		
+	}
 	public Product(int productCode,String name,String brand,int price,String manufacturer,String category)
 	{
 		this.productCode=productCode;
@@ -18,6 +22,7 @@ public class Product {
 		this.manufacturer=manufacturer;
 		this.category=category;
 	}
+
 	public int getProductCode() {
 		return productCode;
 	}

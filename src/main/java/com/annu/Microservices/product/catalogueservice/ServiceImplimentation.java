@@ -5,35 +5,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import com.annu.Microservices.product.catalogue.dto.Product;
 import com.annu.Microservices.product.catalogueservice.Dao.DBConnection;
 
 
-
+@Component
 public class ServiceImplimentation {
 
-/*	public static void main(String args[])
+	 static
 	{
 		ServiceImplimentation imp= new ServiceImplimentation();
 		imp.createTable();
-		int i=imp.addProduct(new Product(1,"AlmondOil","bajaj",70,"BajajHairoil","haircare"));
-		System.out.println(i);
-		Product prod=imp.getProductPrice(new Product(1,"AlmondOil","bajaj",70,"BajajHairoil","haircare"));
-		System.out.println(prod.getPrice());
-		
-		
-	}*/
+		//imp.addProduct(new Product(1,"AlmondOil","bajaj",70,"BajajHairoil","haircare"));		
+	}
 	
 	public ServiceImplimentation()
 	{
 		
 	}
+	
 	
 	public void createTable()
 	{
@@ -104,7 +99,7 @@ public class ServiceImplimentation {
 	
 	
 	
-	public Product retriveProduct(int id)
+	public List<Product> retriveProduct(String productCategory)
 	{
 		int productCode=0;
 		 String name=null;
@@ -115,23 +110,26 @@ public class ServiceImplimentation {
 		Connection con=null;
 		PreparedStatement pst=null;
 		ResultSet rs=null;
-		//Product retrivedProduct= new Product();
-		Product retrivedProduct=new Product(productCode, name, brand, price, manufacturer, category);
+		Product retrivedProduct= null;
+		List<Product> product=new ArrayList<Product>();
+		int i=0;
 		try{
 		con=DBConnection.getConnection();
-		String query="Select * from Product where productcode=?";
+		String query="Select * from Product where category like ?";
 		pst=con.prepareStatement(query);
-		pst.setInt(1,id);
+		pst.setString(1,productCategory);
 		rs=pst.executeQuery();
-		
+
 		while(rs.next())
-		{
+		{   
+			retrivedProduct=new Product(productCode, name, brand, price, manufacturer, category);
 			retrivedProduct.setProductCode(rs.getInt(1));
 			retrivedProduct.setName(rs.getString(2));
 			retrivedProduct.setBrand(rs.getString(3));
 			retrivedProduct.setPrice(rs.getInt(4));
 			retrivedProduct.setManufacturer(rs.getString(5));
 			retrivedProduct.setCategory(rs.getString(6));
+			product.add(i++, retrivedProduct);
 		}
 		
 		}catch(ClassNotFoundException e)
@@ -151,7 +149,7 @@ public class ServiceImplimentation {
 			}
 			
 		}
-		return retrivedProduct;
+		return product;
 		
 	}
 	
@@ -188,7 +186,7 @@ public int deleteProduct(int productId)
 	
 }
 
-public Product getProductPrice(Product product)
+public int getProductPrice(int productId)
 {
 	int productCode=0;
 	 String name=null;
@@ -205,7 +203,7 @@ public Product getProductPrice(Product product)
 	con=DBConnection.getConnection();
 	String query="Select price from Product where productcode=?";
 	pst=con.prepareStatement(query);
-	pst.setInt(1, product.getProductCode());
+	pst.setInt(1, productId);
 	rs=pst.executeQuery();
 	
 	while(rs.next())
@@ -231,10 +229,17 @@ public Product getProductPrice(Product product)
 		}
 		
 	}
-	return retrivedProduct;
+	return retrivedProduct.getPrice();
 	
 }
 
-
+/*public static void main(String args[])
+{
+	ServiceImplimentation imp= new ServiceImplimentation();
+	imp.createTable();
+	imp.addProduct(new Product(1,"AlmondOil","bajaj",70,"BajajHairoil","haircare"));
+	int i=imp.getProductPrice(1);
+	System.out.println(i);
+}*/
 
 }

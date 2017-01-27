@@ -7,7 +7,7 @@ spring:
 spring:
   profiles: standalone
   application:
-     name: catalog-service  # Service registers under this name
+     name: price-service  # Service registers under this name
   freemarker:
     enabled: false           # Ignore Eureka dashboard FreeMarker templates
   thymeleaf:
@@ -21,7 +21,7 @@ error:
 
 # HTTP Server
 server:
-  port: 2222   # HTTP (Tomcat) port
+  port: 2223   # HTTP (Tomcat) port
 
 # Discovery Server Access
 #  1. DEV ONLY: Reduce the lease renewal interval to speed up registration
